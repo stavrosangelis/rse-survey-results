@@ -1,5 +1,6 @@
+"use client";
 import { List, ListItem, ListItemButton, ListItemText } from "@mui/material";
-import { prepareOrderedResponsesData } from '@/utils';
+import { prepareOrderedResponsesData } from "@/utils";
 
 type Properties = {
   title: string;
@@ -15,13 +16,14 @@ export const OrderResponses = (props: Properties) => {
       <List sx={{ maxHeight: "300px", overflowY: "auto" }}>
         {preparedData.map((item, index) => {
           return (
-            item && (
+            (item && (
               <ListItem disablePadding key={index}>
                 <ListItemButton>
                   <ListItemText primary={`${index + 1}. ${item.label}`} />
                 </ListItemButton>
               </ListItem>
-            ) || null
+            )) ||
+            null
           );
         })}
       </List>

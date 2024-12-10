@@ -115,9 +115,10 @@ function generateRandomColorArray(length: number, format: 'hex' | 'rgb' = 'hex')
   return colors;
 }
 /* eslint-disable  @typescript-eslint/no-explicit-any */
-function addColorsToData({ colors, data }: { colors: string[]; data: any }) {
-  const copy = [];
+function addColorsToData({ data }: { data: any }) {
   const { length } = data;
+  const colors = generateRandomColorArray(length);
+  const copy = [];
   for (let i = 0; i < length; i += 1) {
     const item = data[i];
     item.color = colors[i];
@@ -165,6 +166,7 @@ function produceFields(data: CSVRecord[]): Field[] {
       type,
       note,
       data: [],
+      answersNumber: 0,
     }
     if (type !== 'skip') {
       fields.push(field);

@@ -1,3 +1,4 @@
+"use client";
 import { List, ListItem, ListItemButton, ListItemText } from "@mui/material";
 
 type Properties = {
@@ -13,13 +14,14 @@ export const OpenResponses = (props: Properties) => {
       <List sx={{ maxHeight: "300px", overflowY: "auto" }}>
         {data.map((item, index) => {
           return (
-            item && (
+            (item && (
               <ListItem disablePadding key={index}>
                 <ListItemButton>
                   <ListItemText primary={item} />
                 </ListItemButton>
               </ListItem>
-            ) || null
+            )) ||
+            null
           );
         })}
       </List>

@@ -26,7 +26,7 @@ async function getData(): Promise<CSVRecord[]> {
 }
 
 const OutputChart = (props: Field & { index: number }) => {
-  const { data, index, label, note, type } = props;
+  const { answersNumber, data, index, label, note, type } = props;
   let output: JSX.Element | null = null;
   if (type === "pie") {
     const outputData = preparePieData(data);
@@ -34,7 +34,7 @@ const OutputChart = (props: Field & { index: number }) => {
       <Grid size={{ xs: 12, sm: 6 }}>
         <Paper sx={{ padding: "15px" }}>
           {note && <i>{note}</i>}
-          <Pie data={outputData} title={`${index + 1}. ${label}`} />
+          <Pie answersNumber={answersNumber} data={outputData} title={`${index + 1}. ${label}`} />
         </Paper>
       </Grid>
     );
@@ -71,6 +71,7 @@ const OutputChart = (props: Field & { index: number }) => {
 export default async function Home() {
   const data = await getData();
   const fields = produceFields(data);
+  const { length } = data;
   return (
     <Container maxWidth="lg">
       <Grid container spacing={2}>
@@ -79,12 +80,17 @@ export default async function Home() {
             <h1>Research Software Engineering in the Arts and Humanities</h1>
             <h2>Community Interest Group Survey</h2>
             <h3>
-              Number of participants: <small>{data.length}</small>
+              Number of participants: <small>{length}</small>
             </h3>
           </Paper>
         </Grid>
         {fields.map((field, index) => (
-          <OutputChart key={index} index={index} {...field} />
+          <OutputChart
+            key={index}
+            index={index}
+            {...field}
+            answersNumber={length}
+          />
         ))}
       </Grid>
       <Box sx={{ height: "100px" }} />
