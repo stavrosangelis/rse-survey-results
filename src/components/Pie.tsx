@@ -21,9 +21,15 @@ export const Pie = (props: Properties) => {
     const newColoredData = addColorsToData({ data });
     setColoredData(newColoredData);
   }, [data]);
+  
+  const totalResponses = data.map((d) => d.value).reduce((previousValue, currentValue) => previousValue + currentValue);
+  
+  const total = answersNumber >= totalResponses ? answersNumber : totalResponses;
   return (
     <>
-      <h3>{title}</h3>
+      <h3>
+        {title}
+      </h3>
       <Grid container spacing={2}>
         <Grid size={{ xs: 12, sm: 6 }}>
           <PieChart
@@ -33,8 +39,10 @@ export const Pie = (props: Properties) => {
                 data: coloredData,
                 valueFormatter: (v) => {
                   const { value } = v;
-                  const percentage = (value / answersNumber) * 100;
-                  return ` value: ${value},\n percentage: ${percentage.toFixed(2)}%`;
+                  const percentage = (value / total) * 100;
+                  return ` value: ${value},\n percentage: ${percentage.toFixed(
+                    2
+                  )}%`;
                 },
                 highlightScope: { fade: "global", highlight: "item" },
                 faded: {

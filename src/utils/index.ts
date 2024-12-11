@@ -156,7 +156,7 @@ function produceFields(data: CSVRecord[]): Field[] {
         break;
       case 'What is the bus factor of your most important software project? (The bus factor designates the minimal number of developers that have to be hit by a bus (or quit) before a project is incapacitated)\n':
         type = 'pie';
-        note = 'Normalisation of results needed';
+        note = '';
         break;
       default:
         type = 'pie';
