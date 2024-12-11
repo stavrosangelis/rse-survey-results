@@ -63,5 +63,4 @@ export type Field = {
   label: string;
   note?: string;
   type: string;
-  answersNumber: number;
 };

@@ -7,13 +7,12 @@ import { addColorsToData } from "@/utils";
 import type { InputData } from "@/types";
 
 type Properties = {
-  answersNumber: number;
   title: string;
   data: InputData[];
 };
 
 export const Pie = (props: Properties) => {
-  const { answersNumber, data, title } = props;
+  const { data, title } = props;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [coloredData, setColoredData] = useState<any[]>([]);
 
@@ -23,8 +22,7 @@ export const Pie = (props: Properties) => {
   }, [data]);
   
   const totalResponses = data.map((d) => d.value).reduce((previousValue, currentValue) => previousValue + currentValue);
-  
-  const total = answersNumber >= totalResponses ? answersNumber : totalResponses;
+
   return (
     <>
       <h3>
@@ -39,7 +37,7 @@ export const Pie = (props: Properties) => {
                 data: coloredData,
                 valueFormatter: (v) => {
                   const { value } = v;
-                  const percentage = (value / total) * 100;
+                  const percentage = (value / totalResponses) * 100;
                   return ` value: ${value},\n percentage: ${percentage.toFixed(
                     2
                   )}%`;

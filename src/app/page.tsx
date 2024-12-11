@@ -26,7 +26,7 @@ async function getData(): Promise<CSVRecord[]> {
 }
 
 const OutputChart = (props: Field & { index: number }) => {
-  const { answersNumber, data, index, label, note, type } = props;
+  const { data, index, label, note, type } = props;
   let output: JSX.Element | null = null;
   if (type === "pie") {
     const outputData = preparePieData(data);
@@ -34,7 +34,7 @@ const OutputChart = (props: Field & { index: number }) => {
       <Grid size={{ xs: 12, sm: 6 }}>
         <Paper sx={{ padding: "15px" }}>
           {note && <i>{note}</i>}
-          <Pie answersNumber={answersNumber} data={outputData} title={`${index + 1}. ${label}`} />
+          <Pie data={outputData} title={`${index + 1}. ${label}`} />
         </Paper>
       </Grid>
     );
@@ -89,7 +89,6 @@ export default async function Home() {
             key={index}
             index={index}
             {...field}
-            answersNumber={length}
           />
         ))}
       </Grid>
