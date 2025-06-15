@@ -16,15 +16,16 @@ function preparePieData(data: string[]): InputData[] {
       if (clean.includes(';')) {
         const pieces = clean.split(';');
         for (const piece of pieces) {
-          if (piece) {
-            if (!unique.includes(piece)) {
+          const cleanedPiece = cleanString(piece);
+          if (cleanedPiece) {
+            if (!unique.includes(cleanedPiece)) {
               // create new entry
-              results.push({ id: Number(unique.length), value: 1, label: piece });
-              unique.push(piece);
+              results.push({ id: Number(unique.length), value: 1, label: cleanedPiece });
+              unique.push(cleanedPiece);
             } else {
               // update existing
-              const index = results.findIndex((r) => r.label === piece);
-              const existing = results.find((r) => r.label === piece);
+              const index = results.findIndex((r) => r.label === cleanedPiece);
+              const existing = results.find((r) => r.label === cleanedPiece);
               if (index > -1 && existing) {
                 const copy = { ...existing };
                 const { value } = existing;
@@ -131,38 +132,12 @@ function produceFields(data: CSVRecord[]): Field[] {
   const columns = Object.keys(data[0]);
   const fields: Field[] = [];
   for (const column of columns) {
-    let type = 'pie';
-    let note = '';
-    switch (column) {
-      case '﻿Id':
-      case 'Email':
-      case 'Name':
-      case 'Completion time':
-      case 'Please enter your email address (this will not be connected with your answers) (optional)':
-      case 'Please enter your name (this will not be connected with your answers) (optional)':
-      case `Can we add your email address to a list run by the UK-IE CIG for AH RSEs? We'd like to share information on community events, learning and networking opportunities (optional)`:
-        type = 'skip';
-        break;
-      case 'Start time':
-        type = 'completion-time';
-        break;
-      case 'What are the barriers for someone to choose a job as an Arts/Humanities Research Software Engineer (AH RSE)? Please rank each of the following items in order of importance with #1(top) being the most ':
-      case 'What would you hope to get out of such an organisation? Please rank each of the following items in order of importance with #1(top) being the most important object to #3(last) being the least importan':
-        type = 'order';
-        break;
-      case 'Describe briefly your team structure':
-      case 'Any other comments? ':
-        type = 'open-response';
-        break;
-      case 'What is the bus factor of your most important software project? (The bus factor designates the minimal number of developers that have to be hit by a bus (or quit) before a project is incapacitated)\n':
-        type = 'pie';
-        note = '';
-        break;
-      default:
-        type = 'pie';
-    }
+    const matchType = column.match(/[^[\]]+(?=])/g);
+    const type = matchType && matchType.length > 0 ? matchType[0] : 'skip';
+    const note = '';
+    const label = column.replace(`[${type}]`, '').trim();
     const field = {
-      label: column,
+      label,
       type,
       note,
       data: [],
@@ -172,15 +147,15 @@ function produceFields(data: CSVRecord[]): Field[] {
       fields.push(field);
     }
   }
-
   for (const row of data) {
     for (const key of Object.keys(row)) {
-      const findField = fields.find((f) => f.label === key);
+      const label = key.replace(/\[.*?\]/g, '').trim();
+      const findField = fields.find((f) => f.label === label);
       if (findField) {
         if (findField.label !== 'Start time') {
-          findField.data.push(row[key as keyof CSVRecord]);
+          findField.data.push(row[key as any]);
         } else {
-          findField.data.push(`${row['Start time']}-${row['Completion time']}`);
+          findField.data.push(`${row['Start time[completion-time]']}-${row['Completion time[skip]']}`);
         }
 
       }

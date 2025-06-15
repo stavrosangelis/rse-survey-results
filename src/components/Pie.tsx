@@ -20,7 +20,6 @@ export const Pie = (props: Properties) => {
     const newColoredData = addColorsToData({ data });
     setColoredData(newColoredData);
   }, [data]);
-  
   const totalResponses = data.map((d) => d.value).reduce((previousValue, currentValue) => previousValue + currentValue);
 
   return (
